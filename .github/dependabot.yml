@@ -1,0 +1,46 @@
+version: 2
+updates:
+  # Dependencias de npm, fijadas en package-lock.json
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    # Margen para que retiren una version rota antes de adoptarla.
+    cooldown:
+      default-days: 7
+    groups:
+      # Se publican coordinadas: separarlas produce PRs que no compilan.
+      astro:
+        patterns:
+          - 'astro'
+          - '@astrojs/*'
+      tailwind:
+        patterns:
+          - 'tailwindcss'
+          - '@tailwindcss/*'
+          - 'prettier-plugin-tailwindcss'
+      tooling:
+        patterns:
+          - 'eslint'
+          - 'eslint-*'
+          - '@eslint/*'
+          - 'typescript-eslint'
+          - 'prettier'
+          - 'prettier-plugin-astro'
+    ignore:
+      # Fijado a ~6: @astrojs/check declara el peer `^5 || ^6` y con 7 el
+      # typecheck no funciona. Ver CLAUDE.md.
+      - dependency-name: 'typescript'
+        update-types:
+          - 'version-update:semver-major'
+
+  # SHAs de las actions en .github/workflows/
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ['*']

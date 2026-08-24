@@ -1,0 +1,8 @@
+dist
+node_modules
+.astro
+.vercel
+package-lock.json
+# Los .md de contenido se formatean a mano: Prettier reescribe las tablas y los
+# saltos de linea de los textos legales, y ahi el formato es del autor.
+src/content

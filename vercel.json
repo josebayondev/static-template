@@ -1,0 +1,85 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "//": [
+    "cleanUrls + trailingSlash deben cuadrar con astro.config.ts (trailingSlash 'never'",
+    "+ build.format 'file'), o aparecen cadenas de redirects y canonicals que apuntan",
+    "a una URL que redirige.",
+    "",
+    "La CSP de aqui lleva SOLO las directivas que un <meta> no admite. Si activas",
+    "security.csp en astro.config.ts, aqui NO puede aparecer default-src: el navegador",
+    "aplica la interseccion y bloquearia los scripts que el <meta> si autoriza.",
+    "Detalle completo en CLAUDE.md."
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "//": "Se deniegan las APIs que este sitio no usa, para que un script anadido despues no pueda pedirlas sin que nadie lo note.",
+          "key": "Permissions-Policy",
+          "value": "accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=()"
+        },
+        {
+          "//": "Redundante con frame-ancestors en navegadores actuales, pero es lo unico que entienden algunos escaneres y proxies antiguos.",
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "same-origin"
+        }
+      ]
+    },
+    {
+      "//": "Nombre con hash del contenido: si cambia el fichero cambia la URL.",
+      "source": "/_astro/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "//": "Se regeneran con el mismo nombre, asi que no pueden ser immutable.",
+      "source": "/og/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
+      ]
+    }
+  ]
+}

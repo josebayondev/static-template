@@ -1,0 +1,13 @@
+{
+  "extends": "astro/tsconfigs/strictest",
+  // `.astro/types.d.ts` es lo que declara los modulos virtuales (astro:content,
+  // astro:assets...). Ojo: `exclude` filtra a `include`, asi que .astro NO puede
+  // aparecer ahi o el editor pierde esos tipos aunque `astro check` pase.
+  // Se regenera con `npm run sync`.
+  "include": [".astro/types.d.ts", "**/*.ts", "**/*.astro", "*.ts"],
+  "exclude": ["dist", "node_modules", ".vercel"],
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false
+  }
+}
